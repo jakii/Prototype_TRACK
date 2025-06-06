@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    x:Class="TDMASApp.AdminDashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TDMASApp"
+    Title="Admin Dashboard"
+    BackgroundColor="White">
+
+    <RefreshView IsRefreshing="{Binding IsBusy}" Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <StackLayout Padding="20" Spacing="30">
+
+                <!-- Activity Indicator -->
+                <ActivityIndicator 
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" 
+                    Color="DarkBlue" 
+                    HorizontalOptions="Center" />
+
+                <!-- STORAGE MONITORING -->
+                <!--
+                <Frame BorderColor="Gray" CornerRadius="10" Padding="15" BackgroundColor="#D9D9D9">
+                    <StackLayout Spacing="15">
+                        <Label Text="Storage Monitoring" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+
+                      
+                        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                            <Label Text="Total Usage:" FontAttributes="Bold" Grid.Column="0"/>
+                            <ProgressBar 
+                                Progress="{Binding StorageUsagePercentage}"
+                                ProgressColor="{Binding StorageProgressColor}"
+                                Grid.Column="1"
+                                Margin="10,0"
+                                HeightRequest="20"/>
+                            <Label Text="{Binding StorageUsageText}" Grid.Column="2" FontAttributes="Bold"/>
+                        </Grid>
+
+                        <Label Text="Breakdown by User" FontAttributes="Bold" Margin="0,10,0,0"/>
+                        <CollectionView ItemsSource="{Binding StorageUsageByUser}" HeightRequest="150">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame Padding="10" Margin="0,5" BorderColor="LightGray">
+                                        <Grid ColumnDefinitions="*,Auto,Auto">
+                                            <Label Text="{Binding Username}" Grid.Column="0"/>
+                                            <Label Text="{Binding StorageUsed, StringFormat='{0} MB'}" Grid.Column="1" HorizontalOptions="End"/>
+                                            <Label Text="{Binding Percentage, StringFormat='{0}%'}" Grid.Column="2" HorizontalOptions="End" Margin="10,0,0,0"/>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        
+                        <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="End">
+                            <Button Text="Send Cleanup Alert" 
+                                    Command="{Binding SendStorageAlertCommand}" 
+                                    BackgroundColor="#FFA500" 
+                                    TextColor="White"/>
+                            <Button Text="View Full Report" 
+                                    Command="{Binding ViewStorageReportCommand}" 
+                                    BackgroundColor="#0B2945" 
+                                    TextColor="White"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+                -->
+                <!-- USER MANAGEMENT -->
+                <HorizontalStackLayout HorizontalOptions="Start" Spacing="15" >
+                    <Frame BorderColor="Gray" Padding="15" WidthRequest="650" HorizontalOptions="Start" BackgroundColor="#D9D9D9">
+                        <StackLayout Spacing="10">
+                            <Label Text="User Management" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+                            <Button Text="Add User" Command="{Binding AddUserCommand}" BackgroundColor="#0B2945" TextColor="White"/>
+
+                            <!-- Table Header -->
+                            <Grid ColumnDefinitions="*,*,*,Auto,Auto" Padding="10,5" BackgroundColor="#F0F0F0">
+                                <Label Text="Username" FontAttributes="Bold" Grid.Column="0"/>
+                                <Label Text="Email" FontAttributes="Bold" Grid.Column="1"/>
+                                <Label Text="Role" FontAttributes="Bold" Grid.Column="2"/>
+                                <Label Text="Actions" FontAttributes="Bold" Grid.Column="3" Margin="0,0,30,0"/>
+                                <Label Text="" FontAttributes="Bold" Grid.Column="4"/>
+                            </Grid>
+
+                            <ScrollView HeightRequest="350">
+                                <CollectionView ItemsSource="{Binding Users}" SelectionMode="None">
+                                    <CollectionView.EmptyView>
+                                        <Label Text="No users found." TextColor="Gray" HorizontalOptions="Center" />
+                                    </CollectionView.EmptyView>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Frame BorderColor="LightGray" CornerRadius="5" Padding="10" Margin="0,5" >
+                                                <Grid ColumnDefinitions="*,*,*,Auto,Auto" ColumnSpacing="10">
+                                                    <Label Text="{Binding Username}" Grid.Column="0" VerticalOptions="Center" />
+                                                    <Label Text="{Binding Email}" Grid.Column="1" VerticalOptions="Center" Margin="20,0,0,0"/>
+                                                    <Label Text="{Binding Role}" Grid.Column="2" TextColor="Gray" VerticalOptions="Center" Margin="35,0,0,0"/>
+
+                                                    <Button Text="Edit"
+                                                            Grid.Column="3"
+                                                            Margin="0,0,5,0"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdminDashboardPage}}, Path=BindingContext.EditUserCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            BackgroundColor="#62CA4D"
+                                                            TextColor="White" />
+
+                                                    <Button Text="Delete"
+                                                            Grid.Column="4"
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdminDashboardPage}}, Path=BindingContext.DeleteUserCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            BackgroundColor="#B21E1E"
+                                                            TextColor="White" />
+                                                </Grid>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </ScrollView>
+                        </StackLayout>
+                    </Frame>
+                    <!-- DOCUMENT MANAGEMENT -->
+                    <Frame BorderColor="Gray" CornerRadius="10" Padding="15" WidthRequest="650" BackgroundColor="#D9D9D9">
+                        <StackLayout Spacing="10">
+                            <!-- Header -->
+                            <Label Text="Document Management" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+
+                            <!-- Add Document Button -->
+                            <Button Text="Add Document"
+                                    Command="{Binding AddDocumentCommand}"
+                                    BackgroundColor="#0B2945"
+                                    TextColor="White"
+                                    CornerRadius="8"
+                                    HeightRequest="40"/>
+
+                            <!-- Search Bar -->
+                            <SearchBar x:Name="SearchBar"
+                                        Grid.Row="0"
+                                        Placeholder="Search documents..."
+                                        TextChanged="OnSearchTextChanged"
+                                        BackgroundColor="White"
+                                        Margin="10"
+                                        CancelButtonColor="#512BD4" />
+
+                            <!-- Document Grid -->
+                            <ScrollView HeightRequest="300">
+                                <CollectionView x:Name="DocumentsCollection" ItemsSource="{Binding Documents}"
+                                                SelectionMode="Single"
+                                                SelectionChanged="OnDocumentSelected">
+                                    <CollectionView.EmptyView>
+                                        <Label Text="No documents found." TextColor="Gray" HorizontalOptions="Center" />
+                                    </CollectionView.EmptyView>
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout Orientation="Vertical" Span="3"/>
+                                    </CollectionView.ItemsLayout>
+
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Frame BorderColor="LightGray"
+                                                    CornerRadius="8"
+                                                    Padding="10"
+                                                    Margin="5"
+                                                    WidthRequest="200"
+                                                    BackgroundColor="White"
+                                                    HasShadow="True">
+                                                <StackLayout Spacing="5" VerticalOptions="CenterAndExpand">
+                                                    <!-- Document Icon -->
+                                                    <Image Source="{Binding PreviewImage}"
+                                                            HeightRequest="60"
+                                                            WidthRequest="60"
+                                                            HorizontalOptions="Center"/>
+
+                                                    <!-- Document Title -->
+                                                    <Label Text="{Binding Title}"
+                                                            FontAttributes="Bold"
+                                                            HorizontalOptions="Center"
+                                                            LineBreakMode="TailTruncation"
+                                                            FontSize="14"/>
+
+                                                    <!-- Category -->
+                                                    <Label Text="{Binding CategoryFullPath}"
+                                                            FontSize="12"
+                                                            TextColor="DimGray"
+                                                            HorizontalOptions="Center"/>
+
+                                                    <!-- Upload Date -->
+                                                    <Label Text="{Binding UploadDate, StringFormat='Uploaded on {0:MMM dd, yyyy}'}"
+                                                            FontSize="11"
+                                                            TextColor="Gray"
+                                                            HorizontalOptions="Center"/>
+
+                                                    <!-- Edit/Delete Buttons -->
+                                                    <Grid ColumnSpacing="10"
+                                                            Margin="0,10,0,0"
+                                                            HorizontalOptions="Center">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Button Text="Edit"
+                                                                Grid.Column="0"
+                                                                BackgroundColor="#62CA4D"
+                                                                TextColor="White"
+                                                                Padding="10,5"
+                                                                CornerRadius="6"
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdminDashboardPage}}, Path=BindingContext.EditDocumentCommand}"
+                                                                CommandParameter="{Binding}"/>
+
+                                                        <Button Text="Delete"
+                                                                Grid.Column="1"
+                                                                BackgroundColor="#B21E1E"
+                                                                TextColor="White"
+                                                                Padding="10,5"
+                                                                CornerRadius="6"
+                                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdminDashboardPage}}, Path=BindingContext.DeleteDocumentCommand}"
+                                                                CommandParameter="{Binding}"/>
+                                                    </Grid>
+                                                </StackLayout>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </ScrollView>
+                        </StackLayout>
+                    </Frame>
+                </HorizontalStackLayout>
+                
+                <!-- CATEGORY MANAGEMENT -->
+                <Frame BorderColor="Gray" CornerRadius="10" Padding="15" WidthRequest="650" BackgroundColor="#D9D9D9" HorizontalOptions="Start">
+                    <StackLayout Spacing="15">
+                        <!-- Title -->
+                        <Label Text="Category Management" FontAttributes="Bold" FontSize="20" TextColor="Black"/>
+
+                        <!-- Category Buttons -->
+                        <StackLayout Orientation="Horizontal" Spacing="10">
+                            <Button Text="Create Category" 
+                    Command="{Binding CreateCategoryCommand}" 
+                    BackgroundColor="#007ACC" 
+                    TextColor="White" />
+                        </StackLayout>
+
+                        <!-- Category List -->
+                        <ScrollView HeightRequest="150">
+                            <CollectionView ItemsSource="{Binding Categories}" 
+                            SelectedItem="{Binding SelectedCategory}"
+                            SelectionMode="Single">
+                                <CollectionView.EmptyView>
+                                    <Label Text="No categories found." TextColor="Gray" HorizontalOptions="Center" />
+                                </CollectionView.EmptyView>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BorderColor="LightGray" Padding="10" Margin="0,5">
+                                            <StackLayout>
+                                                <!-- Category Name Only -->
+                                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="Black" />
+
+                                                <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                                                    <!-- Spacer -->
+                                                    <BoxView WidthRequest="0" HorizontalOptions="FillAndExpand" />
+
+                                                    <!-- Edit Button -->
+                                                    <Button Text="Edit" 
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdminDashboardPage}}, Path=BindingContext.EditCategoryCommand}" 
+                                                            CommandParameter="{Binding}" 
+                                                            BackgroundColor="Orange" 
+                                                            TextColor="White" 
+                                                            Padding="8,4"
+                                                            CornerRadius="4" />
+
+                                                    <!-- Delete Button -->
+                                                    <Button Text="Delete" 
+                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type local:AdminDashboardPage}}, Path=BindingContext.DeleteCategoryCommand}" 
+                                                            CommandParameter="{Binding}" 
+                                                            BackgroundColor="#B21E1E" 
+                                                            TextColor="White"
+                                                            Padding="8,4"
+                                                            CornerRadius="4" />
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </ScrollView>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

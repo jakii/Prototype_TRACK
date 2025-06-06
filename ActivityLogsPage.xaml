@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TDMASApp.ActivityLogsPage"
+             Title="Activity Logs">
+
+    <RefreshView IsRefreshing="{Binding IsBusy}"
+                 Command="{Binding LoadLogsCommand}">
+        <Grid RowDefinitions="Auto,*">
+            <!-- Header -->
+            <VerticalStackLayout Grid.Row="0" Padding="10,5">
+                <Label Text="Activity Logs"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"/>
+
+                <Label Text="{Binding LastRefreshText}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       HorizontalOptions="End"/>
+            </VerticalStackLayout>
+
+            <!-- Log List -->
+            <CollectionView Grid.Row="1" 
+                           ItemsSource="{Binding ActivityLogs}"
+                           SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="5" Padding="10" 
+                               BorderColor="LightGray" 
+                               CornerRadius="8">
+                            <Grid ColumnDefinitions="Auto,*"
+                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                                <!-- User -->
+                                <Label Grid.Column="0" Grid.Row="0"
+                                       Text="👤"
+                                       VerticalOptions="Start"/>
+                                <Label Grid.Column="1" Grid.Row="0"
+                                       Text="{Binding UserName}"
+                                       FontAttributes="Bold"/>
+
+                                <!-- Role -->
+                                <Label Grid.Column="0" Grid.Row="1"
+                                       Text="🎭"
+                                       VerticalOptions="Start"/>
+                                <Label Grid.Column="1" Grid.Row="1"
+                                       Text="{Binding Role}"
+                                       TextColor="Purple"/>
+
+                                <!-- Action -->
+                                <Label Grid.Column="0" Grid.Row="2"
+                                       Text="⚡"
+                                       VerticalOptions="Start"/>
+                                <Label Grid.Column="1" Grid.Row="2"
+                                       Text="{Binding Action}"
+                                       TextColor="DarkBlue"/>
+
+
+                                <Label Grid.Column="0" Grid.Row="3"
+                                       Text="📄"
+                                       VerticalOptions="Start"/>
+                                <Label Grid.Column="1" Grid.Row="3"
+                                       Text="{Binding DocumentTitle}"/>
+
+ 
+                                <Label Grid.Column="0" Grid.Row="4"
+                                       Text="🕒"
+                                       VerticalOptions="Start"/>
+                                <Label Grid.Column="1" Grid.Row="4"
+                                       Text="{Binding Timestamp, StringFormat='{0:MMM dd, yyyy hh:mm tt}'}"
+                                       FontSize="12"
+                                       TextColor="Gray"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </RefreshView>
+</ContentPage>

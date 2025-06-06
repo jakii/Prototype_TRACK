@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="TDMASApp.HomePage"
+            NavigationPage.HasNavigationBar="True"
+            BarBackgroundColor="#0B2945"
+            BarTextColor="White"
+            BackgroundColor="#F5F5F5">
+
+      <!-- Documents Tab -->
+    <ContentPage x:Name="DocumentsPage" Title="Documents">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Search Bar -->
+            <SearchBar x:Name="SearchBar"
+                   Grid.Row="0"
+                   Placeholder="Search documents..."
+                   TextChanged="OnSearchTextChanged"
+                   BackgroundColor="White"
+                   Margin="10"
+                   CancelButtonColor="#512BD4" />
+
+            <!-- Documents List -->
+            <RefreshView x:Name="RefreshView"
+             Grid.Row="1"
+             Command="{Binding RefreshCommand}"
+             RefreshColor="#0B2945">
+                <Grid>
+                    <!-- Empty State View -->
+                    <StackLayout x:Name="EmptyStateView" 
+                     IsVisible="False"
+                     VerticalOptions="Center" 
+                     HorizontalOptions="Center"
+                     Spacing="15">
+                        <Image Source="nodocuments.png"
+                   HeightRequest="120"
+                   Aspect="AspectFit"/>
+                        <Label Text="No Documents Found"
+                   FontSize="Title"
+                   HorizontalOptions="Center"/>
+                        <Label Text="Upload your first document to get started"
+                   FontSize="Subtitle"
+                   HorizontalOptions="Center"
+                   TextColor="#666"/>
+                    </StackLayout>
+
+                    <!-- Documents list -->
+                    <CollectionView x:Name="DocumentsCollection"
+                       SelectionMode="Single"
+                       SelectionChanged="OnDocumentSelected"
+                       Margin="0,5"
+                       ItemsUpdatingScrollMode="KeepLastItemInView">
+                        <CollectionView.Header>
+                            <StackLayout>
+                                <Label Text="Documents"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#333"
+                           Margin="20,10" />
+                            </StackLayout>
+                        </CollectionView.Header>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="15"
+                           Margin="20,5,20,10"
+                           CornerRadius="12"
+                           BackgroundColor="White"
+                           HasShadow="True">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" 
+                              RowDefinitions="Auto,Auto"
+                              RowSpacing="5">
+                                        <!-- Document Icon -->
+                                        <Image Source="{Binding PreviewImage}"
+                                   HeightRequest="40"
+                                   WidthRequest="40"
+                                   Grid.RowSpan="2"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,10,0"/>
+
+                                        <!-- Document Title -->
+                                        <Label Text="{Binding Title}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#222"
+                                   Grid.Column="1"
+                                   Grid.Row="0"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="TailTruncation"/>
+
+                                        <!-- Document Info -->
+                                        <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                                            <Label Text="{Binding CategoryName}"
+                                       FontSize="12"
+                                       TextColor="#555"
+                                       VerticalOptions="Center"/>
+                                            <BoxView Color="#DDD" WidthRequest="1" HeightRequest="12" VerticalOptions="Center"/>
+                                            <Label Text="{Binding FileSizeDisplay}"
+                                                   FontSize="12"
+                                                   TextColor="#555"
+                                                   VerticalOptions="Center"/>
+                                        </StackLayout>
+
+                                        <!-- Upload Date -->
+                                        <Label Text="{Binding UploadDate, StringFormat='{0:MMM dd, yyyy}'}"
+                                   FontSize="12"
+                                   TextColor="#888"
+                                   Grid.Column="2"
+                                   Grid.Row="0"
+                                   Grid.RowSpan="2"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="End"
+                                   Margin="10,0,0,0"/>
+
+                                        <!-- Action Buttons -->
+                                        <Grid Grid.Column="3"
+                                  Grid.RowSpan="2"
+                                  ColumnDefinitions="Auto,Auto"
+                                  VerticalOptions="Center"
+                                  HorizontalOptions="End"
+                                  Margin="10,0,0,0">
+                                            <!-- Share Button -->
+                                            <Button Grid.Column="0"
+                                        Text="↗"
+                                        FontSize="16"
+                                        TextColor="#0B2945"
+                                        BackgroundColor="Transparent"
+                                        CommandParameter="{Binding .}"/>
+
+
+                                        </Grid>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.Footer>
+                            <StackLayout Padding="20">
+                            </StackLayout>
+                        </CollectionView.Footer>
+                    </CollectionView>
+                </Grid>
+            </RefreshView>
+        </Grid>
+    </ContentPage>
+    
+    <!-- Upload Tab -->
+    <ContentPage x:Name="UploadPage" Title="Upload">
+        <ScrollView>
+            <VerticalStackLayout Padding="20"
+                             Spacing="20"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             WidthRequest="600">
+                <Frame CornerRadius="15"
+                   BackgroundColor="White"
+                   Padding="20">
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Upload New Document"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#0B2945"
+                           HorizontalOptions="Center" />
+
+                        <!-- Category Label with Asterisk -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Category " />
+                                    <Span Text="*" TextColor="Red" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Picker x:Name="CategoryPicker"
+                            ItemDisplayBinding="{Binding Name}"
+                            BackgroundColor="#F0F0F0"
+                            Margin="0,5" />
+
+                        <!-- Description Label with Asterisk -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Description " />
+                                    <Span Text="*" TextColor="Red" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Editor x:Name="DocumentDescriptionEditor"
+                            Placeholder="Description"
+                            HeightRequest="100"
+                            BackgroundColor="#F0F0F0"
+                            Margin="0,5" />
+
+                        <!-- File Label with Asterisk -->
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="File " />
+                                    <Span Text="*" TextColor="Red" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label x:Name="SelectedFileLabel"
+                           Text="No file selected"
+                           TextColor="#888"
+                           FontSize="12"
+                           Margin="0,5" />
+
+                        <Button Text="Select File"
+                            BackgroundColor="#0B2945"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Margin="0,5"
+                            Clicked="OnSelectFileClicked" />
+
+                        <Button Text="Upload Document"
+                            BackgroundColor="#62CA4D"
+                            TextColor="White"
+                            CornerRadius="10"
+                            Margin="0,5"
+                            Clicked="OnUploadDocumentClicked" />
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage>
+
+
+    <!--Shared Documents-->
+    <!--
+    <ContentPage x:Name="SharedDocumentsPage" Title="Shared with Me">
+        <RefreshView x:Name="SharedDocsRefreshView"
+                 Command="{Binding RefreshSharedCommand}"
+                 RefreshColor="#0B2945">
+            <Grid>
+                
+                <StackLayout x:Name="SharedDocsEmptyView" 
+                         IsVisible="False"
+                         VerticalOptions="Center" 
+                         HorizontalOptions="Center"
+                         Spacing="15">
+                    <Image Source="noshareddocuments.png"
+                       HeightRequest="120"
+                       Aspect="AspectFit"/>
+                    <Label Text="No Shared Documents"
+                       FontSize="Title"
+                       HorizontalOptions="Center"/>
+                    <Label Text="You don't have any shared documents yet"
+                       FontSize="Subtitle"
+                       HorizontalOptions="Center"
+                       TextColor="#666"/>
+                </StackLayout>
+
+                
+                <CollectionView x:Name="SharedDocsCollection"
+                           SelectionMode="Single"
+                           SelectionChanged="OnSharedDocumentSelected"
+                           Margin="0,5"
+                           ItemsUpdatingScrollMode="KeepLastItemInView">
+                    <CollectionView.Header>
+                        <StackLayout>
+                            <Label Text="Shared Documents"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="#333"
+                               Margin="20,10" />
+                        </StackLayout>
+                    </CollectionView.Header>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="15"
+                               Margin="20,5,20,10"
+                               CornerRadius="12"
+                               BackgroundColor="White"
+                               HasShadow="True">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" 
+                                  RowDefinitions="Auto,Auto"
+                                  RowSpacing="5">
+                                    
+                                    <Image Source="{Binding PreviewImage}"
+                                       HeightRequest="40"
+                                       WidthRequest="40"
+                                       Grid.RowSpan="2"
+                                       VerticalOptions="Center"
+                                       Margin="0,0,10,0"/>
+
+                                   
+                                    <Label Text="{Binding Title}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#222"
+                                       Grid.Column="1"
+                                       Grid.Row="0"
+                                       VerticalOptions="Center"
+                                       LineBreakMode="TailTruncation"/>
+
+                                    
+                                    <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                                        <Label Text="{Binding CategoryName}"
+                                           FontSize="12"
+                                           TextColor="#555"
+                                           VerticalOptions="Center"/>
+                                        <BoxView Color="#DDD" WidthRequest="1" HeightRequest="12" VerticalOptions="Center"/>
+                                        <Label Text="{Binding FileSizeDisplay}"
+                                           FontSize="12"
+                                           TextColor="#555"
+                                           VerticalOptions="Center"/>
+                                    </StackLayout>
+
+                                  
+                                    <StackLayout Grid.Column="2"
+                                             Grid.RowSpan="2"
+                                             VerticalOptions="Center"
+                                             HorizontalOptions="End"
+                                             Margin="10,0,0,0">
+                                        <Label Text="{Binding SharedByName}"
+                                           FontSize="12"
+                                           TextColor="#888"
+                                           HorizontalOptions="End"/>
+                                        <Label Text="{Binding SharedDate, StringFormat='Shared on {0:MMM dd, yyyy}'}"
+                                           FontSize="12"
+                                           TextColor="#888"
+                                           HorizontalOptions="End"/>
+                                    </StackLayout>
+
+                                   
+                                    <Grid Grid.Column="3"
+                                      Grid.RowSpan="2"
+                                      ColumnDefinitions="Auto"
+                                      VerticalOptions="Center"
+                                      HorizontalOptions="End"
+                                      Margin="10,0,0,0">
+                                        <Button Text="⋮"
+                                            FontSize="16"
+                                            TextColor="#0B2945"
+                                            BackgroundColor="Transparent"
+                                            CommandParameter="{Binding .}"
+                                            Clicked="OnSharedDocumentOptionsClicked"/>
+                                    </Grid>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </RefreshView>
+    </ContentPage>
+    -->
+    <!-- Logout Tab -->
+    <ContentPage Title="Logout"
+             Appearing="OnLogoutAppearing">
+        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <ActivityIndicator IsRunning="True" Color="#512BD4" />
+            <Label Text="Logging out..."
+               TextColor="#512BD4"
+               FontSize="16"
+               FontAttributes="Bold"
+               HorizontalOptions="End"/>
+        </VerticalStackLayout>
+    </ContentPage>
+</TabbedPage>

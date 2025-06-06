@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TDMASApp.RegisterPage"
+             BackgroundColor="#6C6C6C"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="40" Spacing="35" VerticalOptions="Center" WidthRequest="500">
+            <!-- Card Frame -->
+            <Frame CornerRadius="20"
+                   Padding="35"
+                   BackgroundColor="#D9D9D9"
+                   HasShadow="True"
+                   HeightRequest="650"
+                   WidthRequest="500">
+
+                <VerticalStackLayout Spacing="20" VerticalOptions="Start">
+                    <!--logo-->
+                    <Image Source="final_logo.png"
+                            WidthRequest="350"
+                            HeightRequest="130"
+                            Aspect="AspectFit"
+                            Margin="0,0,100,0"/>
+
+                    <!-- Username -->
+                    <Entry x:Name="UsernameEntry"
+                           Placeholder="Username"
+                          BackgroundColor="Transparent"
+                            TextColor="#333"
+                            PlaceholderColor="#999"
+                            HeightRequest="45"
+                            FontSize="16" />
+
+                    <!-- Email -->
+                    <Entry x:Name="EmailEntry"
+                           Placeholder="Email"
+                           Keyboard="Email"
+                           BackgroundColor="Transparent"
+                           TextColor="#333"
+                           PlaceholderColor="#999"
+                           HeightRequest="45"
+                           FontSize="16" />
+
+                    <!-- Password -->
+                    <Entry x:Name="PasswordEntry"
+                            Placeholder="Password"
+                            IsPassword="True"
+                            BackgroundColor="Transparent"
+                            TextColor="#333"
+                            PlaceholderColor="#999"
+                            HeightRequest="45"
+                            FontSize="16" />
+
+                    <!-- Confirm Password -->
+                    <Entry x:Name="ConfirmPasswordEntry"
+                            Placeholder="Confirm Password"
+                            IsPassword="True"
+                            BackgroundColor="Transparent"
+                            TextColor="#333"
+                            PlaceholderColor="#999"
+                            HeightRequest="45"
+                            FontSize="16" />
+
+                    <!-- Show Password Checkbox -->
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox x:Name="ShowPasswordCheckBox" CheckedChanged="OnShowPasswordCheckedChanged"/>
+                        <Label Text="Show Password" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <!-- Register Button -->
+                    <Button Text="Register"
+                            FontSize="20"
+                            Clicked="RegisterButton_Clicked"
+                            BackgroundColor="#0B2945"
+                            TextColor="White"
+                            HeightRequest="45"
+                            CornerRadius="12" />
+
+                    <HorizontalStackLayout HorizontalOptions="Center" Margin="0,20,0,0">
+                        <Label Text="Already have an account?"
+                                FontSize="14"
+                                TextColor="#666" />
+                        <Label Text=" Login"
+                                FontSize="14"
+                                TextColor="#007AFF"
+                                FontAttributes="Bold">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnLoginClicked"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

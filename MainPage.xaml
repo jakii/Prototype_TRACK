@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TDMASApp.MainPage"
+             BackgroundColor="#6C6C6C"
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="80" Spacing="40" VerticalOptions="Center" WidthRequest="600">
+
+            <!-- Card-like container -->
+            <Frame CornerRadius="20"
+                   Padding="35"
+                   BackgroundColor="#D9D9D9"
+                   HasShadow="True"
+                   HeightRequest="500"
+                   WidthRequest="500">
+
+
+                <VerticalStackLayout Spacing="20" VerticalOptions="Start">
+
+                    <!-- logo -->
+                    <Image Source="final_logo.png"
+                            WidthRequest="350"
+                            HeightRequest="130"
+                            Aspect="AspectFit"
+                            Margin="0,0,100,0"/>
+                    <Entry x:Name="EmailEntry"
+                               Keyboard="Email"
+                               BackgroundColor="Transparent"
+                               Placeholder="Email"
+                               PlaceholderColor="#999"
+                               TextColor="Black"
+                               HeightRequest="0"
+                               FontSize="16"/>
+
+                    <Entry x:Name="PasswordEntry"
+                               IsPassword="True"
+                               BackgroundColor="Transparent"
+                               Placeholder="Password"
+                               TextColor="#0B2945"
+                               PlaceholderColor="#999"
+                               HeightRequest="0"
+                               FontSize="16"/>
+                    <HorizontalStackLayout Spacing="10">
+                        <CheckBox x:Name="ShowPasswordCheckBox" CheckedChanged="OnShowPasswordCheckedChanged"/>
+                        <Label Text="Show Password" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+
+                    <!-- Login Button -->
+                    <Button Text="Login"
+                            FontSize="20"
+                            Clicked="OnLoginClicked"
+                            BackgroundColor="#0B2945"
+                            TextColor="White"
+                            CornerRadius="12"
+                            HeightRequest="45"/>
+
+                    <!-- Navigation to Register -->
+                    <HorizontalStackLayout HorizontalOptions="Center">
+                        <Label Text="Don't have an account?"
+                                FontSize="14"
+                                TextColor="#666" />
+                        <Label Text=" Register"
+                                FontSize="14"
+                                TextColor="#007AFF"
+                                FontAttributes="Bold">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnRegisterClicked"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
